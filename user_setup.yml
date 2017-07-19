@@ -19,14 +19,5 @@
         regexp: '^{{user_name}}'
         line: '{{user_name}} ALL=(ALL) NOPASSWD: ALL'
 
-    - name: Install necessary packages
-      yum: name={{ item }} state=present update_cache=yes
-      with_items:
-        - epel-release
-        - git
-        - python
-        - python-devel
-        - python-pip
-
     - name: Create new user
       user: name={{ user_name }} group={{ user_group }} 
