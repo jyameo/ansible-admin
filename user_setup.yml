@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  connection: local
+  become: yes
+
+  vars:
+    user_name: ansible
+    user_pwd: ansible
+    user_group: wheel
+
+  tasks:
+    - name: Make sure we have a 'wheel' group
+      group: name={{ user_group }} state=present
+
+    - name: Allow '{{ user_group }}' group to have passwordless sudo
+      lineinfile: 
+        dest: /etc/sudoers 
+        state: present
+        regexp: '^%{{user_group}}'
+        line: '%{{user_group}} ALL=(ALL) NOPASSWD: ALL'
+
+    - name: Install necessary packages
+      yum: name={{ item }} state=present update_cache=yes
+      with_items:
+        - epel-release
+        - git
+        - python
+        - python-devel
+        - python-pip
+
+    - name: Create new user
+      user: name={{ user_name }} password={{ user_pwd }}group={{ user_group }} append=yes createhome=yes 
