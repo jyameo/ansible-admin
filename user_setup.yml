@@ -5,21 +5,19 @@
 
   vars:
     user_name: ansible
-    user_pwd: $1$Stallion$jmhQwDBxqlQvjG1OXTEoQ1
+    user_pwd: $1$SomeSalt$LRZdP3TwZZZ/q8adbdC0g0
     user_group: wheel
-# print crypt.crypt("ansible", "$1$StallionEye$")
-
 
   tasks:
     - name: Make sure we have a 'wheel' group
       group: name={{ user_group }} state=present
 
-    - name: Allow '{{ user_group }}' group to have passwordless sudo
+    - name: Allow '{{ user_name }}' to have passwordless sudo
       lineinfile: 
         dest: /etc/sudoers 
         state: present
-        regexp: '^%{{user_group}}'
-        line: '%{{user_group}} ALL=(ALL) NOPASSWD: ALL'
+        regexp: '^{{user_name}}'
+        line: '{{user_name}} ALL=(ALL) NOPASSWD: ALL'
 
     - name: Install necessary packages
       yum: name={{ item }} state=present update_cache=yes
@@ -31,4 +29,4 @@
         - python-pip
 
     - name: Create new user
-      user: name={{ user_name }} password={{ user_pwd }}group={{ user_group }} append=yes createhome=yes 
+      user: name={{ user_name }} group={{ user_group }} 
