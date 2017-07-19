@@ -5,8 +5,10 @@
 
   vars:
     user_name: ansible
-    user_pwd: ansible
+    user_pwd: $1$Stallion$jmhQwDBxqlQvjG1OXTEoQ1
     user_group: wheel
+# print crypt.crypt("ansible", "$1$StallionEye$")
+
 
   tasks:
     - name: Make sure we have a 'wheel' group
